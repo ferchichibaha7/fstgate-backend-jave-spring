@@ -1,8 +1,8 @@
 package io.baha.fstgate.models;
+
 import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "study_groups")
