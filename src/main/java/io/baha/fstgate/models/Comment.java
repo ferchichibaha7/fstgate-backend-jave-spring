@@ -1,5 +1,6 @@
 package io.baha.fstgate.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.baha.fstgate.models.audit.UserDateAudit;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

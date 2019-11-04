@@ -21,7 +21,6 @@ public class Post extends UserDateAudit {
 
     @NotNull
     @Size(max = 100)
-    @Column(unique = true)
     private String title;
 
     @NotNull
