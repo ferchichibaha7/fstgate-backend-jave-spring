@@ -36,8 +36,8 @@ private RoleRepository roleRepository;
 
     @GetMapping("/{userID}/{roleName}")
     @Secured( {"ROLE_ADMIN","ROLE_PROF","ROLE_RESP"} )
-    public User getme(@PathVariable Long postId, @Valid @RequestBody Post postRequest) {
-        return currentUser;
+    public User getme(@PathVariable Long postId, @Valid @RequestBody User u) {
+        return u;
     }
 
 
