@@ -38,6 +38,14 @@ private RoleRepository roleRepository;
         return userSummary;
     }
 
+    @GetMapping("/users/{username}")
+    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
+        return userProfile;
+    }
+
     @GetMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
         Boolean isAvailable = !userRepository.existsByUsername(username);
@@ -50,16 +58,7 @@ private RoleRepository roleRepository;
         return new UserIdentityAvailability(isAvailable);
     }
 
-    @GetMapping("/users/{username}")
-    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
-
-        return userProfile;
-    }
 
     @GetMapping("/{userID}/{roleName}")
     @Secured( {"ROLE_ADMIN","ROLE_PROF","ROLE_RESP"} )
