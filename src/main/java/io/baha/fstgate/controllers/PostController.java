@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
@@ -34,6 +35,12 @@ public class PostController {
     public Collection<Post> getMyPosts(@CurrentUser UserPrincipal currentUser) {
         Long userid=currentUser.getId();
         return postRepository.findByCreatedBy(userid);
+    }
+
+    @GetMapping("profile/posts/{desc}")
+    public Page<Post> MyPosts(@PathVariable String desc) {
+
+        return postRepository.findByDescription(desc);
     }
     @GetMapping("profile/{username}/posts")
     public Collection<Post> getPostsByUser(@PathVariable String username) {
