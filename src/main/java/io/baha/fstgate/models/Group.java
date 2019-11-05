@@ -13,7 +13,6 @@ public class Group {
     @NaturalId
     @Column(length = 60)
     private String name;
-
     public Group() {
     }
 
