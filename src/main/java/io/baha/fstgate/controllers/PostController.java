@@ -38,7 +38,7 @@ public class PostController {
     }
 
     @GetMapping("profile/posts/{desc}")
-    public Page<Post> MyPosts(@PathVariable String desc) {
+    public Collection<Post> MyPosts(@PathVariable String desc) {
 
         return postRepository.findByDescription(desc);
     }
