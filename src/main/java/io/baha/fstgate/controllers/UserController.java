@@ -29,8 +29,14 @@ public class UserController {
 private RoleRepository roleRepository;
 
     @GetMapping("/me")
-    @Secured( "ROLE_ADMIN" )
+    @Secured( "ROLE_USER" )
     public UserPrincipal getme(@CurrentUser UserPrincipal currentUser) {
+        return currentUser;
+    }
+
+    @GetMapping("/{userID}/{roleName}")
+    @Secured( {"ROLE_ADMIN","ROLE_PROF","ROLE_RESP"} )
+    public User getme(@PathVariable Long postId, @Valid @RequestBody Post postRequest) {
         return currentUser;
     }
 
