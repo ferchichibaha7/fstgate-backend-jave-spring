@@ -80,7 +80,6 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
-
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
