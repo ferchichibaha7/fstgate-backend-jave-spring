@@ -28,7 +28,6 @@ public class UserController {
     @Autowired
 private RoleRepository roleRepository;
 
-
     @GetMapping("/me")
     @Secured( "ROLE_ADMIN" )
     public UserPrincipal getme(@CurrentUser UserPrincipal currentUser) {
