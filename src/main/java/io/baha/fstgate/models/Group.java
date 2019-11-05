@@ -10,12 +10,9 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     @NaturalId
     @Column(length = 60)
     private String name;
-
 
     public Group() {
     }
