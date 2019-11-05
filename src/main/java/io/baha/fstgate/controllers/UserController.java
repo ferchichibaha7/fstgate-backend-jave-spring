@@ -40,5 +40,4 @@ private RoleRepository roleRepository;
         return u;
     }
 
-
 }
