@@ -1,21 +1,24 @@
 package io.baha.fstgate.message;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class LoginRequest {
 
     @NotBlank
-    private String usernameOrEmail;
+    @Size(min=3, max = 60)
+    private String username;
 
     @NotBlank
+    @Size(min = 6, max = 40)
     private String password;
 
-    public String getUsernameOrEmail() {
-        return usernameOrEmail;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsernameOrEmail(String usernameOrEmail) {
-        this.usernameOrEmail = usernameOrEmail;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
