@@ -1,5 +1,6 @@
 package io.baha.fstgate.security;
 
+import io.baha.fstgate.models.Prev;
 import io.baha.fstgate.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
@@ -24,14 +26,17 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
+   List<Prev> prevs;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, List<Prev> prevs, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.prevs=prevs;
         this.authorities = authorities;
     }
 
@@ -46,9 +51,21 @@ public class UserPrincipal implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getPrevs(),
                 authorities
         );
     }
+
+
+    public List<Prev> getPrevs() {
+        return prevs;
+    }
+
+    public void setPrevs(List<Prev> prevs) {
+        this.prevs = prevs;
+    }
+
+
     public Long getId() {
         return id;
     }

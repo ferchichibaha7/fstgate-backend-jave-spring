@@ -1,11 +1,12 @@
 package io.baha.fstgate.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.baha.fstgate.models.audit.DataAudit;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -47,7 +48,7 @@ public class User extends DataAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -55,8 +56,9 @@ public class User extends DataAudit {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
-    public List<Prev> prevs = new ArrayList<Prev>();
+    public List<Prev> prevs = new ArrayList<>();
 
     public User() {
 

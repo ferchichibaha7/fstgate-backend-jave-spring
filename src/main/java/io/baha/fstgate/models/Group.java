@@ -1,5 +1,6 @@
 package io.baha.fstgate.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ public class Group {
     @NaturalId
     @Column(length = 60)
     private String name;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "group")
     public List<Prev> prevs = new ArrayList();
 

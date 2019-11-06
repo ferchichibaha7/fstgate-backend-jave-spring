@@ -8,7 +8,8 @@ import java.util.List;
 @Entity
 @Table(name = "prevs")
 public class Prev {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     public Long id;
 
@@ -23,6 +24,9 @@ public class Prev {
     @ManyToOne
     @JoinColumn(name = "TYPE_ID")
     private Type type;
+
+    public Prev() {
+    }
 
     public Prev(User user, Group group, Type type) {
         this.user = user;

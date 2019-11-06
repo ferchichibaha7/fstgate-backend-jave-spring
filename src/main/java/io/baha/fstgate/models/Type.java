@@ -1,4 +1,5 @@
 package io.baha.fstgate.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Type {
     @NaturalId
     @Column(length = 60)
     private TypeName name;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "type")
     public List<Prev> prevs = new ArrayList<Prev>();
 
