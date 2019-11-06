@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
     Collection<Post> findByCreatedBy(Long id);
+Collection<Post> findByDescription(String desc);
 
 }
