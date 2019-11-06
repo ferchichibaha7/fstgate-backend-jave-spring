@@ -5,10 +5,7 @@ import io.baha.fstgate.message.ApiResponse;
 import io.baha.fstgate.message.JwtAuthenticationResponse;
 import io.baha.fstgate.message.LoginRequest;
 import io.baha.fstgate.message.SignUpRequest;
-import io.baha.fstgate.models.Group;
-import io.baha.fstgate.models.Role;
-import io.baha.fstgate.models.RoleName;
-import io.baha.fstgate.models.User;
+import io.baha.fstgate.models.*;
 import io.baha.fstgate.repository.GroupRepository;
 import io.baha.fstgate.repository.RoleRepository;
 import io.baha.fstgate.repository.UserRepository;
@@ -69,11 +66,7 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
     }
-    @GetMapping("/test")
-    public User getCurrentUser() {
-        User user1 = new User("sss", "aa", "aaaa", "aaa");
-        return user1;
-    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -88,6 +81,7 @@ public class AuthController {
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
+
 
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

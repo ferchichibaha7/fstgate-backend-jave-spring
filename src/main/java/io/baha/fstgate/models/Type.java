@@ -1,28 +1,28 @@
 package io.baha.fstgate.models;
-
 import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "grouups")
-public class Group {
+@Table(name = "types")
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)
-    private String name;
+    private TypeName name;
 
-    @OneToMany(mappedBy = "group")
-    public List<Prev> prevs = new ArrayList();
+    @OneToMany(mappedBy = "type")
+    public List<Prev> prevs = new ArrayList<Prev>();
 
-    public Group() {
+    public Type() {
     }
 
-    public Group(String name) {
+    public Type(TypeName name) {
         this.name = name;
     }
 
@@ -34,10 +34,11 @@ public class Group {
         this.id = id;
     }
 
-    public String getName() {
+    public TypeName getName() {
         return name;
     }
-    public void setName(String name) {
+
+    public void setName(TypeName name) {
         this.name = name;
     }
 }
