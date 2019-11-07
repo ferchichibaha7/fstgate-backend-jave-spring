@@ -17,7 +17,8 @@ public class Type {
     @Column(length = 60)
     private TypeName name;
     @JsonIgnore
-    @OneToMany(mappedBy = "type")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "type_id")
     public List<Prev> prevs = new ArrayList<Prev>();
 
     public Type() {

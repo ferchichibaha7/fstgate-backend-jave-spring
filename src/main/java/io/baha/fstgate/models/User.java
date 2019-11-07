@@ -5,6 +5,7 @@ import io.baha.fstgate.models.audit.DataAudit;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -57,7 +58,8 @@ public class User extends DataAudit {
     private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id")
     public List<Prev> prevs = new ArrayList<>();
 
     public User() {
@@ -127,5 +129,8 @@ public class User extends DataAudit {
 
     public void setPrevs(List<Prev> prevs) {
         this.prevs = prevs;
+    }
+    public void addPrevs(Prev prev) {
+        this.prevs.add(prev);
     }
 }

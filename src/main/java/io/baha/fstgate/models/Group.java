@@ -17,8 +17,14 @@ public class Group {
     @Column(length = 60)
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "group")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "group_id")
     public List<Prev> prevs = new ArrayList();
+
+    public Group(String name, List<Prev> prevs) {
+        this.name = name;
+        this.prevs = prevs;
+    }
 
     public Group() {
     }

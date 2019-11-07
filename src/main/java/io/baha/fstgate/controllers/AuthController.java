@@ -8,6 +8,7 @@ import io.baha.fstgate.message.SignUpRequest;
 import io.baha.fstgate.models.*;
 import io.baha.fstgate.repository.GroupRepository;
 import io.baha.fstgate.repository.RoleRepository;
+import io.baha.fstgate.repository.TypeRepository;
 import io.baha.fstgate.repository.UserRepository;
 import io.baha.fstgate.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    TypeRepository typeRepository;
 
     @Autowired
     GroupRepository groupRepository;
@@ -82,8 +86,11 @@ public class AuthController {
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
 
-
-
+Group group=null ;
+Type type=typeRepository.findByName(TypeName.TYPE_STUDENT)
+        .orElseThrow(() -> new AppException("User Type not set."));
+Prev userPrev=new Prev(user,group,type);
+user.addPrevs(userPrev);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
