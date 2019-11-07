@@ -1,11 +1,13 @@
 package io.baha.fstgate.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.baha.fstgate.models.audit.DataAudit;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -47,7 +49,7 @@ public class User extends DataAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -55,22 +57,21 @@ public class User extends DataAudit {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_groups",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Group> groups = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id")
+    public List<Prev> prevs = new ArrayList<>();
 
     public User() {
 
     }
 
-    public User(String name, String username, String email, String password) {
+    public User(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+
     }
 
     public Long getId() {
@@ -122,11 +123,14 @@ public class User extends DataAudit {
         this.roles = roles;
     }
 
-    public Set<Group> getGroups() {
-        return groups;
+    public List<Prev> getPrevs() {
+        return prevs;
     }
 
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
+    public void setPrevs(List<Prev> prevs) {
+        this.prevs = prevs;
+    }
+    public void addPrevs(Prev prev) {
+        this.prevs.add(prev);
     }
 }

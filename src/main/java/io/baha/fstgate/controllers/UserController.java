@@ -4,11 +4,9 @@ import io.baha.fstgate.message.ApiResponse;
 import io.baha.fstgate.message.UserIdentityAvailability;
 import io.baha.fstgate.message.UserProfile;
 import io.baha.fstgate.message.UserSummary;
-import io.baha.fstgate.models.Post;
-import io.baha.fstgate.models.Role;
-import io.baha.fstgate.models.RoleName;
-import io.baha.fstgate.models.User;
+import io.baha.fstgate.models.*;
 import io.baha.fstgate.repository.PostRepository;
+import io.baha.fstgate.repository.PrevRepository;
 import io.baha.fstgate.repository.RoleRepository;
 import io.baha.fstgate.repository.UserRepository;
 import io.baha.fstgate.security.CurrentUser;
@@ -21,7 +19,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.util.Optional;
+import java.io.Console;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -30,10 +29,20 @@ public class UserController {
 
     @Autowired
 private RoleRepository roleRepository;
+    @Autowired
+    private PrevRepository prevRepository;
 
 
+    @GetMapping("/user/group")
+    public Collection<Group> getprevs(@CurrentUser UserPrincipal currentUser) {
+      User u =userRepository.findById(currentUser.getId()) .orElseThrow(() -> new ResourceNotFoundException("g"));
+    List<Group> l=new ArrayList<>() ;
+        prevRepository.findByUser(u).forEach(p-> {
+            l.add(p.getGroup());
+        });
+        return l ;
+    }
     @GetMapping("/user/me")
-    @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
         return userSummary;
