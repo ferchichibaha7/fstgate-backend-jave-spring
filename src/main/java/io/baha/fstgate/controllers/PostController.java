@@ -58,6 +58,7 @@ public class PostController {
         return postRepository.save(post);
     }
 
+
     @PutMapping("/posts/{postId}")
     public Post updatePost(@PathVariable Long postId, @Valid @RequestBody Post postRequest) {
         return postRepository.findById(postId).map(post -> {

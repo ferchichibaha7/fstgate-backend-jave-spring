@@ -1,35 +1,30 @@
 package io.baha.fstgate.models;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "grouups")
-public class Group {
+@Table(name = "types")
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)
-    private String name;
+    private TypeName name;
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "group_id")
-    public List<Prev> prevs = new ArrayList();
+    @JoinColumn(name = "type_id")
+    public List<Prev> prevs = new ArrayList<Prev>();
 
-    public Group(String name, List<Prev> prevs) {
-        this.name = name;
-        this.prevs = prevs;
+    public Type() {
     }
 
-    public Group() {
-    }
-
-    public Group(String name) {
+    public Type(TypeName name) {
         this.name = name;
     }
 
@@ -41,10 +36,11 @@ public class Group {
         this.id = id;
     }
 
-    public String getName() {
+    public TypeName getName() {
         return name;
     }
-    public void setName(String name) {
+
+    public void setName(TypeName name) {
         this.name = name;
     }
 }
