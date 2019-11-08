@@ -1,4 +1,5 @@
 package io.baha.fstgate.controllers;
+import io.baha.fstgate.FstgateApplication;
 import io.baha.fstgate.exception.AppException;
 
 import io.baha.fstgate.message.ApiResponse;
@@ -11,6 +12,8 @@ import io.baha.fstgate.repository.RoleRepository;
 import io.baha.fstgate.repository.TypeRepository;
 import io.baha.fstgate.repository.UserRepository;
 import io.baha.fstgate.security.JwtTokenProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,8 @@ import java.util.Collections;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private static final Logger LOGGER = LogManager.getLogger(FstgateApplication.class);
+
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -67,6 +72,7 @@ public class AuthController {
 
         String jwt = tokenProvider.generateToken(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        LOGGER.warn(userDetails.getUsername()+" logged In !!");
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
     }

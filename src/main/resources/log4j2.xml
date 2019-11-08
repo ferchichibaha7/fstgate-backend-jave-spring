@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} - %msg%n" />
+        </Console>
+        <!-- File Appender -->
+        <File name="File" fileName="c://lognew/new.log">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a}  - %msg%n" />
+        </File>
+
+    </Appenders>
+
+    <Loggers>
+        <!-- Log everything in custom package
+        <Logger name="com.boraji.tutorial.springboot" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+-->
+        <!-- Log everything in Spring Boot -->
+        <Logger name="org.springframework.boot" level="warn" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+
+        <Logger name="org.springframework.core" level="warn" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+-->
+        <Root level="warn">
+            <AppenderRef ref="File"  />
+        </Root>
+
+    </Loggers>
+</Configuration>
