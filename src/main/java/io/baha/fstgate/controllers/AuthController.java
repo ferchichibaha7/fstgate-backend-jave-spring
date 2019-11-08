@@ -72,7 +72,7 @@ public class AuthController {
 
         String jwt = tokenProvider.generateToken(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        LOGGER.warn(userDetails.getUsername()+" logged In !!");
+        LOGGER.info(loginRequest.getUsername()+userDetails.getAuthorities()+"--SIGNIN");
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
     }
@@ -109,7 +109,7 @@ user.addPrevs(userPrev);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
-
+        LOGGER.info(result.getUsername()+"["+userRole.getName()+"]"+"--SIGNUP");
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 }

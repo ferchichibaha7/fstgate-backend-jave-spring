@@ -6,34 +6,31 @@
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} - %msg%n" />
         </Console>
         <!-- File Appender -->
-        <File name="File" fileName="c://lognew/new.log">
+        <File name="File" fileName="c://fstgate_logs/fstgate_logs.log">
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a}  - %msg%n" />
         </File>
 
     </Appenders>
 
     <Loggers>
-        <!-- Log everything in custom package
-        <Logger name="com.boraji.tutorial.springboot" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
+        <!-- Log everything in custom package-->
+        <Logger name="io.baha.fstgate" level="info" additivity="false">
             <AppenderRef ref="File" />
         </Logger>
--->
+
         <!-- Log everything in Spring Boot -->
-        <Logger name="org.springframework.boot" level="warn" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="File" />
-        </Logger>
+<!--        <Logger name="org.springframework.boot" level="warn" additivity="false">-->
+<!--            <AppenderRef ref="Console" />-->
+<!--            <AppenderRef ref="File" />-->
+<!--        </Logger>-->
 
 
-        <Logger name="org.springframework.core" level="warn" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="File" />
-        </Logger>
+<!--        <Logger name="org.springframework.core" level="warn" additivity="false">-->
+<!--            <AppenderRef ref="Console" />-->
+<!--            <AppenderRef ref="File" />-->
+<!--        </Logger>-->
 -->
-        <Root level="warn">
-            <AppenderRef ref="File"  />
-        </Root>
+
 
     </Loggers>
 </Configuration>
