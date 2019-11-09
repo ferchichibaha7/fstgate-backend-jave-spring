@@ -47,9 +47,11 @@ public class Post extends UserDateAudit {
     public Post() {
     }
 
-    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 250) String description) {
+    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 250) String description, Subgroup subgroup, Group group) {
         this.title = title;
         this.description = description;
+        this.subgroup = subgroup;
+        this.group = group;
     }
 
     public Long getId() {
@@ -74,5 +76,21 @@ public class Post extends UserDateAudit {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Subgroup getSubgroup() {
+        return subgroup;
+    }
+
+    public void setSubgroup(Subgroup subgroup) {
+        this.subgroup = subgroup;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

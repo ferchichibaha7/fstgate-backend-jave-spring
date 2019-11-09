@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class Subgroup extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @NotNull
     private String name;
 
@@ -28,4 +28,36 @@ public class Subgroup extends UserDateAudit {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Group group;
+
+    public Subgroup() {
+    }
+
+    public Subgroup(@NotNull String name, Group group) {
+        this.name = name;
+        this.group = group;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 }

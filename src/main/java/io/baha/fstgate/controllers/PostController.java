@@ -1,14 +1,15 @@
 package io.baha.fstgate.controllers;
 
 
+import io.baha.fstgate.exception.AppException;
 import io.baha.fstgate.exception.ResourceNotFoundException;
 import io.baha.fstgate.message.ApiResponse;
-import io.baha.fstgate.models.Post;
-import io.baha.fstgate.models.User;
-import io.baha.fstgate.repository.PostRepository;
-import io.baha.fstgate.repository.UserRepository;
+import io.baha.fstgate.message.PostRequest;
+import io.baha.fstgate.models.*;
+import io.baha.fstgate.repository.*;
 import io.baha.fstgate.security.CurrentUser;
 import io.baha.fstgate.security.UserPrincipal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,22 +27,30 @@ public class PostController {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PrevRepository prevRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private SubGroupRepository subGroupRepository;
 
-    @GetMapping("/posts")
-    public Page<Post> getAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable);
-    }
+//    @GetMapping("/posts")
+//    public Page<Post> getAllPosts(Pageable pageable) {
+//        return postRepository.findAll(pageable);
+//    }
+@GetMapping("/posts")
+public Collection<Post> GetAllPosts (){
+    return  postRepository.findAll();
+}
+
+
     @GetMapping("profile/posts")
-    public Collection<Post> getMyPosts(@CurrentUser UserPrincipal currentUser) {
+    public Collection<Post> GetAllUserPosts(@CurrentUser UserPrincipal currentUser) {
         Long userid=currentUser.getId();
         return postRepository.findByCreatedBy(userid);
     }
 
-    @GetMapping("profile/posts/{desc}")
-    public Collection<Post> MyPosts(@PathVariable String desc) {
 
-        return postRepository.findByDescription(desc);
-    }
     @GetMapping("profile/{username}/posts")
     public Collection<Post> getPostsByUser(@PathVariable String username) {
       Optional <User> u= userRepository.findByUsername(username);
@@ -53,9 +62,24 @@ public class PostController {
         return postRepository.findById(postId);
     }
 
-    @PostMapping("/posts")
-    public Post createPost(@Valid @RequestBody Post post) {
-        return postRepository.save(post);
+    @PostMapping("/posts/{subid}")
+    public Post createPost(@Valid @RequestBody PostRequest postRequest,@PathVariable Long subid) {
+    Post p=new Post();
+    p.setTitle(postRequest.getTitle());
+p.setDescription(postRequest.getDescription());
+Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
+Group g =sb.getGroup();
+p.setSubgroup(sb);
+p.setGroup(g);
+    return postRepository.save(p);
+
+  }
+    @PostMapping("/sub/{grpid}")
+    public Subgroup createSub(@PathVariable Long grpid) {
+        Group gp=groupRepository.findById(grpid).orElseThrow(() -> new AppException("User Role not set."));
+Subgroup sb=new Subgroup("test1",gp);
+ return subGroupRepository.save(sb);
+
     }
 
 
