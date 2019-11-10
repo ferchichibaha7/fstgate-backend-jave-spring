@@ -68,9 +68,8 @@ public Collection<Post> GetAllPosts (){
     p.setTitle(postRequest.getTitle());
 p.setDescription(postRequest.getDescription());
 Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
-Group g =sb.getGroup();
 p.setSubgroup(sb);
-p.setGroup(g);
+
     return postRepository.save(p);
 
   }

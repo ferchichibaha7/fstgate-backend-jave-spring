@@ -35,23 +35,16 @@ public class Post extends UserDateAudit {
     @JsonIgnore
     private Subgroup subgroup;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "group_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Group group;
-
-
 
 
     public Post() {
     }
 
-    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 250) String description, Subgroup subgroup, Group group) {
+    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 250) String description, Subgroup subgroup) {
         this.title = title;
         this.description = description;
         this.subgroup = subgroup;
-        this.group = group;
+
     }
 
     public Long getId() {
@@ -86,11 +79,5 @@ public class Post extends UserDateAudit {
         this.subgroup = subgroup;
     }
 
-    public Group getGroup() {
-        return group;
-    }
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
 }

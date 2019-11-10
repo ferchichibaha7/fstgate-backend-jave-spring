@@ -2,6 +2,7 @@ package io.baha.fstgate.models;
 
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,19 @@ public class Role {
     @NaturalId
     @Column(length = 60)
     private  RoleName name;
-
+    @NotNull
+    private int approved;
 
     public Role() {
 
+    }
+
+    public int getApproved() {
+        return approved;
+    }
+
+    public void setApproved(int aproved) {
+        this.approved = aproved;
     }
 
     public Role(RoleName name) {
