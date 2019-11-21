@@ -24,10 +24,10 @@ public class SignUpRequest {
     private String password;
 
 
-    private String UserRole;
+    private long role;
 
 
-    private long UserGroup;
+    private long group;
 
 
 
@@ -63,19 +63,19 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public String getUserRole() {
-        return UserRole;
+    public long getRole() {
+        return role;
     }
 
-    public void setUserRole(String userRole) {
-        UserRole = userRole;
+    public void setRole(long role) {
+        this.role = role;
     }
 
-    public long getUserGroup() {
-        return UserGroup;
+    public long getGroup() {
+        return group;
     }
 
-    public void setUserGroup(long userGroup) {
-        UserGroup = userGroup;
+    public void setGroup(long group) {
+        this.group = group;
     }
 }

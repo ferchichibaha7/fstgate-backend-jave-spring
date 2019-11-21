@@ -7,10 +7,7 @@ import io.baha.fstgate.message.JwtAuthenticationResponse;
 import io.baha.fstgate.message.LoginRequest;
 import io.baha.fstgate.message.SignUpRequest;
 import io.baha.fstgate.models.*;
-import io.baha.fstgate.repository.GroupRepository;
-import io.baha.fstgate.repository.RoleRepository;
-import io.baha.fstgate.repository.TypeRepository;
-import io.baha.fstgate.repository.UserRepository;
+import io.baha.fstgate.repository.*;
 import io.baha.fstgate.security.JwtTokenProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,6 +41,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    StateRepository stateRepository;
 
     @Autowired
     TypeRepository typeRepository;
@@ -92,9 +92,16 @@ public class AuthController {
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
         Type type=null;
-Group group=groupRepository.findByName("SRT")
-        .orElseThrow(() -> new AppException("Group not found."));
-        Role userRole =roleRepository.findByName(RoleName.ROLE_ADMIN)
+        Group group=null;
+        if (signUpRequest.getGroup()==0){
+            group=null;
+        }
+        else{
+            group=groupRepository.findById(signUpRequest.getGroup())
+                    .orElseThrow(() -> new AppException("Group not found."));
+        }
+
+        Role userRole =roleRepository.findById(signUpRequest.getRole())
                 .orElseThrow(() -> new AppException("User Role not set."));
         user.setRoles(Collections.singleton(userRole));
 if (userRole.getName()==RoleName.ROLE_PROF ||userRole.getName()==RoleName.ROLE_ADMIN){
@@ -105,10 +112,20 @@ else {
    type=typeRepository.findByName(TypeName.TYPE_NORM)
             .orElseThrow(() -> new AppException("User Type not set."));
 }
-
 Prev userPrev=new Prev(user,group,type);
 user.addPrevs(userPrev);
 user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userRole.getName()==RoleName.ROLE_PROF){
+            State userState =stateRepository.findById((long)2)
+                    .orElseThrow(() -> new AppException("User State not set."));
+            user.setStates(Collections.singleton(userState));
+
+        }
+        else{
+            State userState =stateRepository.findById((long)1)                   .orElseThrow(() -> new AppException("User State not set."));
+           user.setStates(Collections.singleton(userState));
+       }
+
 
 
 

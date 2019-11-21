@@ -1,11 +1,10 @@
 package io.baha.fstgate.models;
-
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "State")
+public class State {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,15 +12,13 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)
-    private  RoleName name;
+    private  StateName Name;
 
-
-    public Role() {
-
+    public State() {
     }
 
-    public Role(RoleName name) {
-        this.name = name;
+    public State(StateName name) {
+        this.Name = name;
     }
 
     public Long getId() {
@@ -32,11 +29,11 @@ public class Role {
         this.id = id;
     }
 
-    public RoleName getName() {
-        return name;
+    public StateName getName() {
+        return Name;
     }
 
-    public void setName(RoleName name) {
-        this.name = name;
+    public void setName(StateName name) {
+        this.Name = name;
     }
 }

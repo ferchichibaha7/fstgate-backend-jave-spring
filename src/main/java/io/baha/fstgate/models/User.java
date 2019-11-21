@@ -58,6 +58,14 @@ public class User extends DataAudit {
     private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_state",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "state_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<State> states = new HashSet<>();
+
+    @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "user_id")
     public List<Prev> prevs = new ArrayList<>();
@@ -132,5 +140,13 @@ public class User extends DataAudit {
     }
     public void addPrevs(Prev prev) {
         this.prevs.add(prev);
+    }
+
+    public Set<State> getStates() {
+        return states;
+    }
+
+    public void setStates(Set<State> states) {
+        this.states = states;
     }
 }
