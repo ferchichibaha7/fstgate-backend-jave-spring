@@ -17,19 +17,10 @@ public class Role {
     @NaturalId
     @Column(length = 60)
     private  RoleName name;
-    @NotNull
-    private int approved;
+
 
     public Role() {
 
-    }
-
-    public int getApproved() {
-        return approved;
-    }
-
-    public void setApproved(int aproved) {
-        this.approved = aproved;
     }
 
     public Role(RoleName name) {

@@ -1,5 +1,7 @@
 package io.baha.fstgate.message;
 
+import io.baha.fstgate.models.RoleName;
+
 import javax.validation.constraints.*;
 
 public class SignUpRequest {
@@ -20,6 +22,14 @@ public class SignUpRequest {
     @NotBlank
     @Size(min = 6, max = 20)
     private String password;
+
+
+    private String UserRole;
+
+
+    private long UserGroup;
+
+
 
     public String getName() {
         return name;
@@ -51,5 +61,21 @@ public class SignUpRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserRole() {
+        return UserRole;
+    }
+
+    public void setUserRole(String userRole) {
+        UserRole = userRole;
+    }
+
+    public long getUserGroup() {
+        return UserGroup;
+    }
+
+    public void setUserGroup(long userGroup) {
+        UserGroup = userGroup;
     }
 }

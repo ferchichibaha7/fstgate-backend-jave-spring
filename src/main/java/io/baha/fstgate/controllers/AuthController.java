@@ -80,28 +80,37 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
-
-Group group=null ;
-Type type=typeRepository.findByName(TypeName.TYPE_STUDENT)
-        .orElseThrow(() -> new AppException("User Type not set."));
-Prev userPrev=new Prev(user,group,type);
-user.addPrevs(userPrev);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+        Type type=null;
+Group group=groupRepository.findByName("SRT")
+        .orElseThrow(() -> new AppException("Group not found."));
+        Role userRole =roleRepository.findByName(RoleName.ROLE_ADMIN)
                 .orElseThrow(() -> new AppException("User Role not set."));
         user.setRoles(Collections.singleton(userRole));
+if (userRole.getName()==RoleName.ROLE_PROF ||userRole.getName()==RoleName.ROLE_ADMIN){
+    type=typeRepository.findByName(TypeName.TYPE_RESP)
+            .orElseThrow(() -> new AppException("User Type not set."));
+}
+else {
+   type=typeRepository.findByName(TypeName.TYPE_NORM)
+            .orElseThrow(() -> new AppException("User Type not set."));
+}
+
+Prev userPrev=new Prev(user,group,type);
+user.addPrevs(userPrev);
+user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
 
 
         User result = userRepository.save(user);
