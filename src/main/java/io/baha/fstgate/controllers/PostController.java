@@ -76,7 +76,7 @@ p.setSubgroup(sb);
     @PostMapping("/sub/{grpid}")
     public Subgroup createSub(@PathVariable Long grpid) {
         Group gp=groupRepository.findById(grpid).orElseThrow(() -> new AppException("User Role not set."));
-Subgroup sb=new Subgroup("test1",gp);
+Subgroup sb=new Subgroup("java",gp);
  return subGroupRepository.save(sb);
 
     }

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
 
 @RestController
@@ -57,6 +58,14 @@ public class AuthController {
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
+
+
+
+    @GetMapping("/groups")
+    public Collection<Group> getAllGroups (){
+        return  groupRepository.findAllByOrderByNameDesc();
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -93,12 +102,12 @@ public class AuthController {
                 signUpRequest.getEmail(), signUpRequest.getPassword());
         Type type=null;
         Group group=null;
-        if (signUpRequest.getGroup()==0){
+        if (signUpRequest.getRole()==2){
             group=null;
         }
         else{
             group=groupRepository.findById(signUpRequest.getGroup())
-                    .orElseThrow(() -> new AppException("Group not found."));
+                    .orElseThrow(() -> new AppException("Please select a group!"));
         }
 
         Role userRole =roleRepository.findById(signUpRequest.getRole())
