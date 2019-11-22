@@ -14,4 +14,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     Collection<Post> findByCreatedBy(Long id);
 Collection<Post> findByDescription(String desc);
 
+    @Query(value = "SELECT * from posts where posts.sub_group_id IN (select subgroup.id from subgroup where subgroup.group_id = ?1)", nativeQuery = true)
+    Collection<Post> findByGroupOrderByCreatedAtDesc(long groupid);
+
 }

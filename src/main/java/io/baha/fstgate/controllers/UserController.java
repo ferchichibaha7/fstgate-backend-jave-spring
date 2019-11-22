@@ -1,4 +1,6 @@
 package io.baha.fstgate.controllers;
+
+import io.baha.fstgate.exception.AppException;
 import io.baha.fstgate.exception.ResourceNotFoundException;
 import io.baha.fstgate.message.ApiResponse;
 import io.baha.fstgate.message.UserIdentityAvailability;
@@ -51,6 +53,12 @@ private RoleRepository roleRepository;
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
         return userProfile;
+    }
+
+    @GetMapping("/users/prev")
+    public Prev getUserPrev(@CurrentUser UserPrincipal currentUser) {
+        Prev Userprev = prevRepository.findFirstByUserId(currentUser.getId()).orElseThrow(() -> new AppException("have no group"));
+        return Userprev;
     }
 
     @GetMapping("/user/checkUsernameAvailability")

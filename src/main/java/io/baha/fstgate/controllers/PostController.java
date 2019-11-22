@@ -57,6 +57,12 @@ public Collection<Post> GetAllPosts (){
       Long id=u.get().getId();
         return postRepository.findByCreatedBy(id);
     }
+
+    @GetMapping("posts/group/{groupid}")
+    public Collection<Post> getPostsByGroup(@PathVariable Long groupid) {
+        return postRepository.findByGroupOrderByCreatedAtDesc(groupid);
+    }
+
     @GetMapping("/posts/{postId}")
     public Optional <Post>  getPost(@PathVariable Long postId) {
         return postRepository.findById(postId);

@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PrevRepository extends  JpaRepository<Prev,Long> {
 Collection<Prev> findByUser(User u);
 boolean existsByGroupIdAndUserId(Long group,Long id);
+
+    Optional<Prev> findFirstByUserId(long id);
 }
