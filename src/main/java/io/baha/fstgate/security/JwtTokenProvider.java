@@ -15,7 +15,7 @@ public class JwtTokenProvider {
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationInMs}")
+    @Value("149299200")
     private int jwtExpirationInMs;
 
     public String generateToken(Authentication authentication) {
