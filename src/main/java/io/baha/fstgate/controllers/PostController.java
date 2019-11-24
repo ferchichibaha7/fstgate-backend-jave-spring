@@ -79,9 +79,10 @@ public Collection<Post> GetAllPosts (){
     p.setTitle(postRequest.getTitle());
 p.setDescription(postRequest.getDescription());
 Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
-        Collection<Prev> pv = prevRepository.findByUserIdAndGroupId(currentUser.getId(), sb.getId());
+        Collection<Prev> pv = prevRepository.gettate(currentUser.getId(), sb.getGroup().getId());
 
-        if (pv.isEmpty()) throw new AppException("you are not allowd");
+        if (pv.isEmpty())
+            throw new AppException("you are not allowd" + currentUser.getId() + "sb id:" + sb.getId() + "prev:");
         else {
             p.setSubgroup(sb);
             return postRepository.save(p);
