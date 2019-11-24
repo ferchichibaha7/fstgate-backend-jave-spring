@@ -60,7 +60,7 @@ public Collection<Post> GetAllPosts (){
 
     @GetMapping("posts/group/{groupid}")
     public Collection<Post> getPostsByGroup(@PathVariable Long groupid) {
-        return postRepository.findByGroupOrderByCreatedAtDesc(groupid);
+        return postRepository.GetPostByGroup(groupid);
     }
 
     @GetMapping("posts/subgroup/{subid}")
@@ -74,14 +74,18 @@ public Collection<Post> GetAllPosts (){
     }
 
     @PostMapping("/posts/{subid}")
-    public Post createPost(@Valid @RequestBody PostRequest postRequest,@PathVariable Long subid) {
+    public Post createPost(@Valid @RequestBody PostRequest postRequest, @PathVariable Long subid, @CurrentUser UserPrincipal currentUser) {
     Post p=new Post();
     p.setTitle(postRequest.getTitle());
 p.setDescription(postRequest.getDescription());
 Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
-p.setSubgroup(sb);
+        Collection<Prev> pv = prevRepository.findByUserIdAndGroupId(currentUser.getId(), sb.getId());
 
-    return postRepository.save(p);
+        if (pv.isEmpty()) throw new AppException("you are not allowd");
+        else {
+            p.setSubgroup(sb);
+            return postRepository.save(p);
+        }
 
   }
     @PostMapping("/sub/{grpid}")

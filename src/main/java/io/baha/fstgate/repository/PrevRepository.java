@@ -13,4 +13,6 @@ Collection<Prev> findByUser(User u);
     Optional<Prev> findFirstByUserId(long id);
 
     Collection<Prev> findByUserId(long id);
+
+    Collection<Prev> findByUserIdAndGroupId(Long uid, Long gid);
 }
