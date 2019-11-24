@@ -1,0 +1,20 @@
+INSERT IGNORE INTO roles(id, name)
+VALUES (1, 'ROLE_ADMIN');
+INSERT IGNORE INTO roles(id, name)
+VALUES (2, 'ROLE_PROF');
+INSERT IGNORE INTO roles(id, name)
+VALUES (3, 'ROLE_STUD');
+INSERT IGNORE INTO grouups(id, name)
+VALUES (1, 'SRT');
+INSERT IGNORE INTO types(id, name)
+VALUES (1, 'TYPE_RESP');
+INSERT IGNORE INTO types(id, name)
+VALUES (2, 'TYPE_NORM');
+INSERT IGNORE INTO state(id, name)
+VALUES (1, 'STATE_ACTIVE');
+INSERT IGNORE INTO state(id, name)
+VALUES (2, 'STATE_PENDING');
+INSERT IGNORE INTO state(id, name)
+VALUES (3, 'STATE_BLOCKED');
+
+

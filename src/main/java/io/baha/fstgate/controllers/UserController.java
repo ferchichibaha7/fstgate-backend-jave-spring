@@ -30,6 +30,8 @@ public class UserController {
 private RoleRepository roleRepository;
     @Autowired
     private PrevRepository prevRepository;
+    @Autowired
+    private SubGroupRepository subGroupRepository;
 
 
     @GetMapping("/user/group")
@@ -42,23 +44,29 @@ private RoleRepository roleRepository;
         return l ;
     }
     @GetMapping("/user/me")
-    public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+    public UserProfile getCurrentUser(@CurrentUser UserPrincipal currentUser) {
+        UserProfile userSummary = new UserProfile(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
         return userSummary;
     }
 
-    @GetMapping("/users/{username}")
-    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
-        return userProfile;
-    }
+//    @GetMapping("/users/{username}")
+//    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+//        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
+//        return userProfile;
+//    }
 
-    @GetMapping("/users/prev")
-    public Prev getUserPrev(@CurrentUser UserPrincipal currentUser) {
+    @GetMapping("/users/stud/prev")
+    public Prev getStudPrev(@CurrentUser UserPrincipal currentUser) {
         Prev Userprev = prevRepository.findFirstByUserId(currentUser.getId()).orElseThrow(() -> new AppException("have no group"));
         return Userprev;
+    }
+
+    @GetMapping("/users/prof/prev")
+    public Collection<Prev> getProfPrev(@CurrentUser UserPrincipal currentUser) {
+        Collection<Prev> Profprevs = prevRepository.findByUserId(currentUser.getId());
+        return Profprevs;
     }
 
     @GetMapping("/user/checkUsernameAvailability")
@@ -80,5 +88,13 @@ private RoleRepository roleRepository;
     public User getme(@PathVariable Long postId, @Valid @RequestBody User u) {
         return u;
     }
+
+
+    @GetMapping("subgroup/group/{groupid}")
+    public Collection<Subgroup> GetSubGroupsByGroupId(@PathVariable Long groupid) {
+        return subGroupRepository.GetSubGroupsByGroupId(groupid);
+    }
+
+
 
 }

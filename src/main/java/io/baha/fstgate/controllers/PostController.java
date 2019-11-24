@@ -63,6 +63,11 @@ public Collection<Post> GetAllPosts (){
         return postRepository.findByGroupOrderByCreatedAtDesc(groupid);
     }
 
+    @GetMapping("posts/subgroup/{subid}")
+    public Collection<Post> getPostsBySubGroup(@PathVariable Long subid) {
+        return postRepository.GetPostBySub(subid);
+    }
+
     @GetMapping("/posts/{postId}")
     public Optional <Post>  getPost(@PathVariable Long postId) {
         return postRepository.findById(postId);
