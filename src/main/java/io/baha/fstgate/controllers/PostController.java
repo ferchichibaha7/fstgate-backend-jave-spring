@@ -76,6 +76,9 @@ public Collection<Post> GetAllPosts (){
     @PostMapping("/posts/{subid}")
     public Post createPost(@Valid @RequestBody PostRequest postRequest, @PathVariable Long subid, @CurrentUser UserPrincipal currentUser) {
     Post p=new Post();
+        if (postRequest.getTitle() == "" || postRequest.getDescription() == "")
+            throw new AppException("invalid post request");
+
     p.setTitle(postRequest.getTitle());
 p.setDescription(postRequest.getDescription());
 Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
