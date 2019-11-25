@@ -103,7 +103,9 @@ public class AuthController {
         Type type=null;
         Group group=null;
         if (signUpRequest.getRole()==2){
-            group=null;
+            group = groupRepository.findByName("SRT")
+                    .orElseThrow(() -> new AppException("Group with id 2 not exist"));
+            ;
         }
         else{
             group=groupRepository.findById(signUpRequest.getGroup())
