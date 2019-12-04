@@ -3,6 +3,7 @@ package io.baha.fstgate.repository;
 import io.baha.fstgate.models.State;
 import io.baha.fstgate.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -16,5 +17,6 @@ public interface UserRepository extends JpaRepository <User, Long> {
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
 
-    Optional<State> findFirstById(Long id);
+    @Query(value = "SELECT * FROM users where user_id in(select user_id from user_state where state_id = 2)", nativeQuery = true)
+    Collection<User> findPending();
 }

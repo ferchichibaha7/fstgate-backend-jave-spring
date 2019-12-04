@@ -2,10 +2,7 @@ package io.baha.fstgate.controllers;
 
 import io.baha.fstgate.exception.AppException;
 import io.baha.fstgate.exception.ResourceNotFoundException;
-import io.baha.fstgate.message.ApiResponse;
-import io.baha.fstgate.message.UserIdentityAvailability;
-import io.baha.fstgate.message.UserProfile;
-import io.baha.fstgate.message.UserSummary;
+import io.baha.fstgate.message.*;
 import io.baha.fstgate.models.*;
 import io.baha.fstgate.repository.*;
 import io.baha.fstgate.security.CurrentUser;
@@ -32,6 +29,8 @@ private RoleRepository roleRepository;
     private PrevRepository prevRepository;
     @Autowired
     private SubGroupRepository subGroupRepository;
+    @Autowired
+    private StateRepository stateRepository;
 
 
     @GetMapping("/user/group")
@@ -49,13 +48,13 @@ private RoleRepository roleRepository;
         return userSummary;
     }
 
-//    @GetMapping("/users/{username}")
-//    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-//        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
-//        return userProfile;
-//    }
+    @GetMapping("/users/{userid}")
+    public UserProfile getUserbyid(@PathVariable Long userid) {
+        User user = userRepository.findById(userid)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName());
+        return userProfile;
+    }
 
     @GetMapping("/users/stud/prev")
     public Prev getStudPrev(@CurrentUser UserPrincipal currentUser) {
@@ -67,6 +66,20 @@ private RoleRepository roleRepository;
     public Collection<Prev> getProfPrev(@CurrentUser UserPrincipal currentUser) {
         Collection<Prev> Profprevs = prevRepository.findByUserId(currentUser.getId());
         return Profprevs;
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/users/pending")
+    public Collection<User> getPending() {
+        Collection<User> PendingUsers = userRepository.findPending();
+        return PendingUsers;
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/users/activate/{userid}")
+    public ResponseEntity<?> activate(@PathVariable Long userid) {
+        stateRepository.ActivateState(userid);
+        return ResponseEntity.ok(new ApiResponse(true, "User activated!"));
     }
 
     @GetMapping("/user/checkUsernameAvailability")
