@@ -133,7 +133,7 @@ user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         }
         else{
-            State userState =stateRepository.findById((long)1)                   .orElseThrow(() -> new AppException("User State not set."));
+            State userState = stateRepository.findById((long) 1).orElseThrow(() -> new AppException("User State not set."));
            user.setStates(Collections.singleton(userState));
        }
 

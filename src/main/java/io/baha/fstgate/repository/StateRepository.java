@@ -21,6 +21,4 @@ public interface StateRepository extends JpaRepository<State, Long> {
     @Query(value = "UPDATE user_state set state_id=1 where user_id =?1", nativeQuery = true)
     void ActivateState(long userid);
 
-
-
 }
