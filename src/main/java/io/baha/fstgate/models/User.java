@@ -70,8 +70,11 @@ public class User extends DataAudit {
     @JoinColumn(name = "user_id")
     public List<Prev> prevs = new ArrayList<>();
 
-    public User() {
+    private boolean isEnabled;
 
+    public User() {
+        super();
+        isEnabled = false;
     }
 
     public User(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password) {
@@ -148,5 +151,13 @@ public class User extends DataAudit {
 
     public void setStates(Set<State> states) {
         this.states = states;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }

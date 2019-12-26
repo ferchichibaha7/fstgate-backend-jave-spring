@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username or email : " + usernameOrEmail)
                 );
-
+        if (user.isEnabled() == false) throw new AppException("Email not confirmed yet");
         Long s = stateRepository.gettate(user.getId()).orElseThrow(() -> new AppException("state wrong"));
         ;
 

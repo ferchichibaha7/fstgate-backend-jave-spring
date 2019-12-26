@@ -9,11 +9,13 @@ import io.baha.fstgate.message.SignUpRequest;
 import io.baha.fstgate.models.*;
 import io.baha.fstgate.repository.*;
 import io.baha.fstgate.security.JwtTokenProvider;
+import io.baha.fstgate.services.EmailSenderService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -59,7 +62,11 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
 
 
     @GetMapping("/groups")
@@ -100,6 +107,7 @@ public class AuthController {
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
+
         Type type=null;
         Group group=null;
         if (signUpRequest.getRole()==2){
@@ -125,6 +133,7 @@ else {
 }
 Prev userPrev=new Prev(user,group,type);
 user.addPrevs(userPrev);
+        user.setEnabled(false);
 user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userRole.getName()==RoleName.ROLE_PROF){
             State userState =stateRepository.findById((long)2)
@@ -142,11 +151,46 @@ user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 
         User result = userRepository.save(user);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+        confirmationTokenRepository.save(confirmationToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("chand312902@gmail.com");
+        mailMessage.setText("To confirm your account, please click here : "
+                + "http://localhost:4200/#/confirm-account/" + confirmationToken.getConfirmationToken());
+
+        emailSenderService.sendEmail(mailMessage);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
         LOGGER.info(result.getUsername()+"["+userRole.getName()+"]"+"--SIGNUP");
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
+
+    @RequestMapping(value = "/confirm-account/{token}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> confirmUserAccount(@PathVariable String token) {
+
+        ConfirmationToken tokenn = confirmationTokenRepository.findByConfirmationToken(token)
+                .orElseThrow(() -> new AppException("token doesnt exist."));
+        ;
+
+        if (tokenn != null) {
+            User user = userRepository.findByEmail(tokenn.getUser().getEmail())
+                    .orElseThrow(() -> new AppException("wrong email"));
+            ;
+            userRepository.EnableUser(user.getId());
+            return new ResponseEntity<>(new ApiResponse(true, "account verified!"),
+                    HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ApiResponse(false, "Link invalid or broken!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }
