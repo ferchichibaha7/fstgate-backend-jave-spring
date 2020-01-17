@@ -20,6 +20,17 @@ public abstract class UserDateAudit extends DataAudit {
     @LastModifiedBy
     private Long updatedBy;
 
+    @Column(updatable = false)
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public Long getCreatedBy() {
         return createdBy;
     }

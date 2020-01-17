@@ -6,6 +6,12 @@ INSERT IGNORE INTO roles(id, name)
 VALUES (3, 'ROLE_STUD');
 INSERT IGNORE INTO grouups(id, name)
 VALUES (1, 'SRT');
+INSERT IGNORE INTO grouups(id, name)
+VALUES (2, 'PROFS');
+INSERT IGNORE INTO grouups(id, name)
+VALUES (3, 'LFI');
+INSERT IGNORE INTO grouups(id, name)
+VALUES (4, 'LFM');
 INSERT IGNORE INTO types(id, name)
 VALUES (1, 'TYPE_RESP');
 INSERT IGNORE INTO types(id, name)

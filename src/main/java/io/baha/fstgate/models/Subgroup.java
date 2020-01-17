@@ -29,12 +29,24 @@ public class Subgroup extends UserDateAudit {
     @JsonIgnore
     private Group group;
 
+    private boolean isEnabled;
+
     public Subgroup() {
+        super();
+        isEnabled = true;
     }
 
     public Subgroup(@NotNull String name, Group group) {
         this.name = name;
         this.group = group;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public Long getId() {

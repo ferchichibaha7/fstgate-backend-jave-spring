@@ -4,11 +4,21 @@ public class UserSummary {
     private Long id;
     private String username;
     private String name;
+    private Long ppic;
 
-    public UserSummary(Long id, String username, String name) {
+    public UserSummary(Long id, String username, String name, Long ppic) {
         this.id = id;
         this.username = username;
         this.name = name;
+        this.ppic = ppic;
+    }
+
+    public Long getPpic() {
+        return ppic;
+    }
+
+    public void setPpic(Long ppic) {
+        this.ppic = ppic;
     }
 
     public Long getId() {

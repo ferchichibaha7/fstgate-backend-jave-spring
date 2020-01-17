@@ -14,8 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.io.Console;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -44,7 +47,7 @@ private RoleRepository roleRepository;
     }
     @GetMapping("/user/me")
     public UserProfile getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserProfile userSummary = new UserProfile(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+        UserProfile userSummary = new UserProfile(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), currentUser.getPpic().getId());
         return userSummary;
     }
 
@@ -52,7 +55,7 @@ private RoleRepository roleRepository;
     public UserProfile getUserbyid(@PathVariable Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName());
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getPpic().getId());
         return userProfile;
     }
 
@@ -80,6 +83,12 @@ private RoleRepository roleRepository;
     public ResponseEntity<?> activate(@PathVariable Long userid) {
         stateRepository.ActivateState(userid);
         return ResponseEntity.ok(new ApiResponse(true, "User activated!"));
+    }
+
+    @GetMapping("/sub/disable/{subid}")
+    public ResponseEntity<?> disablesub(@PathVariable Long subid) {
+        subGroupRepository.disablesub(subid);
+        return ResponseEntity.ok(new ApiResponse(true, "Subgroup disabled!"));
     }
 
     @GetMapping("/user/checkUsernameAvailability")

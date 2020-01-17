@@ -1,5 +1,6 @@
 package io.baha.fstgate.repository;
 
+import io.baha.fstgate.models.Ppic;
 import io.baha.fstgate.models.State;
 import io.baha.fstgate.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +21,7 @@ public interface UserRepository extends JpaRepository <User, Long> {
     Boolean existsByEmail(String email);
 
     Optional<User> findByEmail(String email);
+
     @Query(value = "SELECT * FROM users where user_id in(select user_id from user_state where state_id = 2)", nativeQuery = true)
     Collection<User> findPending();
 
@@ -28,6 +30,14 @@ public interface UserRepository extends JpaRepository <User, Long> {
     @Query(value = "UPDATE users set is_enabled=true where user_id =?1", nativeQuery = true)
     void EnableUser(long userid);
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE subgroup set is_enabled=false where id =?1", nativeQuery = true)
+    void disablesub(long subid);
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE users set ppic_id=?1 where user_id =?2", nativeQuery = true)
+    void updateprofilepic(long ppic_id, long userid);
 
 }

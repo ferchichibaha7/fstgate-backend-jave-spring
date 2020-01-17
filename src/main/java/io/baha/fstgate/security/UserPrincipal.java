@@ -1,5 +1,6 @@
 package io.baha.fstgate.security;
 
+import io.baha.fstgate.models.Ppic;
 import io.baha.fstgate.models.Prev;
 import io.baha.fstgate.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,18 +27,21 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
-   List<Prev> prevs;
+    List<Prev> prevs;
+
+    private Ppic ppic;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, List<Prev> prevs, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, List<Prev> prevs, Ppic ppic, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.prevs=prevs;
+        this.prevs = prevs;
         this.authorities = authorities;
+        this.ppic = ppic;
     }
 
     public static UserPrincipal create(User user) {
@@ -52,6 +56,7 @@ public class UserPrincipal implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getPrevs(),
+                user.getPpic(),
                 authorities
         );
     }
@@ -65,6 +70,13 @@ public class UserPrincipal implements UserDetails {
         this.prevs = prevs;
     }
 
+    public Ppic getPpic() {
+        return ppic;
+    }
+
+    public void setPpic(Ppic ppic) {
+        this.ppic = ppic;
+    }
 
     public Long getId() {
         return id;

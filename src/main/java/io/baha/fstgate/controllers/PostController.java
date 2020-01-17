@@ -68,19 +68,25 @@ public Collection<Post> GetAllPosts (){
         return postRepository.GetPostBySub(subid);
     }
 
+    @GetMapping("/subgroups/{subId}")
+    public Optional<Subgroup> getSubgroupById(@PathVariable Long subId) {
+        return subGroupRepository.findById(subId);
+    }
+
     @GetMapping("/posts/{postId}")
-    public Optional <Post>  getPost(@PathVariable Long postId) {
+    public Optional<Post> getPost(@PathVariable Long postId) {
         return postRepository.findById(postId);
     }
 
     @PostMapping("/posts/{subid}")
     public Post createPost(@Valid @RequestBody PostRequest postRequest, @PathVariable Long subid, @CurrentUser UserPrincipal currentUser) {
-    Post p=new Post();
+        Post p = new Post();
         if (postRequest.getTitle() == "" || postRequest.getDescription() == "")
             throw new AppException("invalid post request");
 
     p.setTitle(postRequest.getTitle());
-p.setDescription(postRequest.getDescription());
+        p.setDescription(postRequest.getDescription());
+        p.setUsername(currentUser.getName());
 Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppException("User Role not set."));
         Collection<Prev> pv = prevRepository.gettate(currentUser.getId(), sb.getGroup().getId());
 
@@ -91,12 +97,14 @@ Subgroup sb =subGroupRepository.findById(subid).orElseThrow(() -> new AppExcepti
             return postRepository.save(p);
         }
 
-  }
-    @PostMapping("/sub/{grpid}")
-    public Subgroup createSub(@PathVariable Long grpid) {
-        Group gp=groupRepository.findById(grpid).orElseThrow(() -> new AppException("User Role not set."));
-Subgroup sb=new Subgroup("java",gp);
- return subGroupRepository.save(sb);
+    }
+
+    @PostMapping("/sub/{grpid}/{subname}")
+    public Subgroup createSub(@PathVariable Long grpid, @PathVariable String subname) {
+        Group gp = groupRepository.findById(grpid).orElseThrow(() -> new AppException("User Role not set."));
+        Subgroup sb = new Subgroup(subname, gp);
+        sb.setEnabled(true);
+        return subGroupRepository.save(sb);
 
     }
 

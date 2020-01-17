@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,6 +50,9 @@ public class AuthController {
 
     @Autowired
     StateRepository stateRepository;
+
+    @Autowired
+    PpicRepository ppicRepository;
 
     @Autowired
     TypeRepository typeRepository;
@@ -111,7 +116,7 @@ public class AuthController {
         Type type=null;
         Group group=null;
         if (signUpRequest.getRole()==2){
-            group = groupRepository.findByName("SRT")
+            group = groupRepository.findByName("PROFS")
                     .orElseThrow(() -> new AppException("Group with id 2 not exist"));
             ;
         }
@@ -131,6 +136,7 @@ else {
    type=typeRepository.findByName(TypeName.TYPE_NORM)
             .orElseThrow(() -> new AppException("User Type not set."));
 }
+
 Prev userPrev=new Prev(user,group,type);
 user.addPrevs(userPrev);
         user.setEnabled(false);
@@ -140,17 +146,23 @@ user.setPassword(passwordEncoder.encode(user.getPassword()));
                     .orElseThrow(() -> new AppException("User State not set."));
             user.setStates(Collections.singleton(userState));
 
-        }
-        else{
+        } else {
             State userState = stateRepository.findById((long) 1).orElseThrow(() -> new AppException("User State not set."));
-           user.setStates(Collections.singleton(userState));
-       }
+            user.setStates(Collections.singleton(userState));
+        }
 
 
+        Ppic picture = ppicRepository.findByName("profilepic.png").orElseThrow(() -> new AppException("userpicuter png not found."));
+        ;
 
+        user.setPpic(picture);
 
 
         User result = userRepository.save(user);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+        LOGGER.info(result.getUsername() + "[" + userRole.getName() + "]" + "--SIGNUP");
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
 
         confirmationTokenRepository.save(confirmationToken);
@@ -158,17 +170,15 @@ user.setPassword(passwordEncoder.encode(user.getPassword()));
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom("chand312902@gmail.com");
+        mailMessage.setFrom("fstgate.baha@gmail.com");
         mailMessage.setText("To confirm your account, please click here : "
                 + "http://localhost:4200/#/confirm-account/" + confirmationToken.getConfirmationToken());
 
         emailSenderService.sendEmail(mailMessage);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
-        LOGGER.info(result.getUsername()+"["+userRole.getName()+"]"+"--SIGNUP");
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+
+
     }
 
 

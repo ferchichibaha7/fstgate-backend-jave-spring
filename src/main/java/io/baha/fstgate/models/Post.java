@@ -40,7 +40,7 @@ public class Post extends UserDateAudit {
     public Post() {
     }
 
-    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 250) String description, Subgroup subgroup) {
+    public Post(@NotNull @Size(max = 100) String title, @NotNull @Size(max = 800) String description, Subgroup subgroup) {
         this.title = title;
         this.description = description;
         this.subgroup = subgroup;

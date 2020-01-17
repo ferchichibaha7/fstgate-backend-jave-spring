@@ -1,6 +1,7 @@
 package io.baha.fstgate.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.baha.fstgate.message.UserProfile;
 import io.baha.fstgate.models.audit.DataAudit;
 import org.hibernate.annotations.*;
 
@@ -71,6 +72,10 @@ public class User extends DataAudit {
     public List<Prev> prevs = new ArrayList<>();
 
     private boolean isEnabled;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "ppic_id")
+    private Ppic Ppic;
+
 
     public User() {
         super();
@@ -89,6 +94,14 @@ public class User extends DataAudit {
         return id;
     }
 
+    public Ppic getPpic() {
+        return this.Ppic;
+    }
+
+    public void setPpic(Ppic ppic) {
+
+        this.Ppic = ppic;
+    }
 
     public void setId(Long id) {
         this.id = id;
