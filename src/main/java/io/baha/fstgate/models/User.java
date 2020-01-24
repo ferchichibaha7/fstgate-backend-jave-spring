@@ -44,7 +44,6 @@ public class User extends DataAudit {
     @NaturalId
     @NotBlank
     @Size(max = 40)
-    @Email
     private String email;
 
     @NotBlank
